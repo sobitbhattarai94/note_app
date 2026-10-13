@@ -1,11 +1,23 @@
 import Note from "../models/Note.js";
-const getAllNotes = async (req, res) => {
+const getAllNotes = async (_, res) => { // in the params we were not using the req parameter so we put an underscore instead, its just a convention that we follow in the industry apparently 😮😮😮
   try {
     const notes = await Note.find();
+    // const notes = awati Note.find().sort({createdAt:-1}); // sort method is inbuilt mongodb method to sort the outputs. -1 gives the latest one at the first, 1 givest the oldest one first and this is the default behaviour without using the sort method
     res.status(200).json(notes);
   } catch (error) {
     res.status(500).json({ message: "error getting all notes:" });
     console.error("error getting all notes: ", error);
+  }
+};
+
+const getNote = async (req, res) => {
+  try {
+    const note = await Note.findById(req.params.id);
+    if(!note) return res.status(404).json({message:"note not found!!"});
+    res.status(200).json({ message: "note found successfully!", note: note });
+  } catch (error) {
+    console.log("error fetching the note: ", error);
+    res.status(500).json({ message: "error fetching the note" });
   }
 };
 
@@ -49,7 +61,8 @@ const updateNote = async (req, res) => {
 
 const deleteNote = async (req, res) => {
   try {
-    await Note.findByIdAndDelete(req.params.id);
+    const deletedNote = await Note.findByIdAndDelete(req.params.id);
+    if (!deletedNote) return res.status(404).json({ message: "note not found" });
     res.status(200).json({ message: "note deleted successfully" });
   } catch (error) {
     res.status(500).json({ message: "error deleting the note" });
@@ -57,4 +70,4 @@ const deleteNote = async (req, res) => {
   }
 };
 
-export { getAllNotes, postNote, updateNote, deleteNote };
+export { getAllNotes, postNote, updateNote, deleteNote, getNote };
