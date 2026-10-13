@@ -32,8 +32,15 @@ const updateNote = async (req, res) => {
     // tempNote = Note({ title, content });
     // await tempNote.save();
     const { title, content } = req.body;
-    await Note.findByIdAndUpdate(req.params.id, { title, content });
-    res.status(200).json({ message: "note updated successfully" });
+    const updatedNote = await Note.findByIdAndUpdate(
+      req.params.id,
+      { title, content },
+      { new: true }, // by default the findByAndUpdate method returns old data before update, but doing this it will return the updated value after the line runs
+    );
+    if (!updatedNote)
+      return res.status(404).json({ message: "note not found!!" });
+
+    res.status(200).json({ message: "note updated successfully", updatedNote});
   } catch (error) {
     console.error("error updating the note: ", error);
     res.status(500).json({ message: "error updating the note" });
@@ -42,10 +49,10 @@ const updateNote = async (req, res) => {
 
 const deleteNote = async (req, res) => {
   try {
-    await Note.findByIdAndDelete(req.params.id)
-    res.status(200).json({message:"note deleted successfully"})
+    await Note.findByIdAndDelete(req.params.id);
+    res.status(200).json({ message: "note deleted successfully" });
   } catch (error) {
-    res.status(500).json({message:"error deleting the note"});
+    res.status(500).json({ message: "error deleting the note" });
     console.error("error deleting the note: ", error);
   }
 };
