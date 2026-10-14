@@ -1,8 +1,14 @@
 import React from 'react'
+import Navbar from '../components/Navbar'
 
 const CreatePage = () => {
   return (
-    <div>CreatePage</div>
+    <div className='px-8'>
+      <Navbar />
+      <div>
+        createpage
+      </div>
+    </div>
   )
 }
 
