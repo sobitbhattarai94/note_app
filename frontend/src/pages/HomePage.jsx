@@ -1,8 +1,10 @@
 import { useEffect, useState } from "react";
 import Navbar from "../components/Navbar";
 import axios from "axios";
+import Card from "../components/Card";
 const HomePage = () => {
   const [notes, setNotes] = useState([]);
+  const [isLoading, setIsLoading] = useState(true);
   useEffect(() => {
     const getNotes = async () => {
       try {
@@ -12,6 +14,8 @@ const HomePage = () => {
         setNotes(response.data);
       } catch (error) {
         console.error("error fetching notes: ", error);
+      } finally{
+        setIsLoading(false);
       }
     };
     getNotes();
@@ -19,13 +23,14 @@ const HomePage = () => {
   return (
     <div className="min-h-screen">
       <Navbar />
-      <div className="flex justify-between items-center gap-3 ">
-        {notes.map((note) => (
-          <div className="border m-3 p-4 w-fit rounded-sm" key={note._id}>
-            <h1>{note.title}</h1>
-            <p>{note.content}</p>
-          </div>
-        ))}
+      <div className="grid max-w-6xl mx-auto mt-6  grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+        {isLoading ? (
+          <h2>Loading...</h2>
+        ) : (
+          notes.map((note) => (
+            <Card key={note._id} note={note} />
+          ))
+        )}
       </div>
     </div>
   );
