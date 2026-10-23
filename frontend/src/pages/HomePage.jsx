@@ -29,7 +29,7 @@ const HomePage = () => {
           <h2>Loading...</h2>
         ) : (
           notes.map((note) => (
-            <Card key={note._id} note={note} />
+            <Card key={note._id} note={note} setNotes = {setNotes} />
           ))
         )}
       </div>
