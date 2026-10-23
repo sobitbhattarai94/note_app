@@ -1,7 +1,7 @@
 import Note from "../models/Note.js";
 const getAllNotes = async (_, res) => { // in the params we were not using the req parameter so we put an underscore instead, its just a convention that we follow in the industry apparently 😮😮😮
   try {
-    const notes = await Note.find();
+    const notes = await Note.find().sort({createdAt:-1});
     // const notes = awati Note.find().sort({createdAt:-1}); // sort method is inbuilt mongodb method to sort the outputs. -1 gives the latest one at the first, 1 givest the oldest one first and this is the default behaviour without using the sort method
     res.status(200).json(notes);
   } catch (error) {

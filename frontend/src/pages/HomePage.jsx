@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
-import Navbar from "../components/Navbar";
 import axios from "axios";
+
+import Navbar from "../components/Navbar";
 import Card from "../components/Card";
 const HomePage = () => {
   const [notes, setNotes] = useState([]);
