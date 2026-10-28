@@ -1,8 +1,8 @@
 import { useState, useEffect } from "react";
 import { Link, useNavigate, useParams } from "react-router";
 import toast from "react-hot-toast";
-import axios from "axios";
 import { ArrowLeft, Loader2, Trash } from "lucide-react";
+import meroAxios from "../utils/axios";
 const NoteDetailsPage = () => {
   const [note, setNote] = useState(null);
   const [isLoading, setIsLoading] = useState(true);
@@ -16,7 +16,8 @@ const NoteDetailsPage = () => {
     const fetchNote = async () => {
       // setIsLoading(true);
       try {
-        const res = await axios.get(`http://localhost:5001/api/notes/${id}`);
+        const res = await meroAxios.get(`/notes/${id}`);
+        // const res = await axios.get(`http://localhost:5001/api/notes/${id}`);
         setNote(res.data.note);
       } catch (error) {
         toast.error("error fetching the note: ", error);
@@ -31,7 +32,8 @@ const NoteDetailsPage = () => {
   const handleDelete = async () => {
     try {
       if(!window.confirm("are you sure?")) return;
-      await axios.delete(`http://localhost:5001/api/notes/${id}`);
+      await meroAxios.delete(`/notes/${id}`);
+      // await axios.delete(`http://localhost:5001/api/notes/${id}`);
       toast.success("successfully deleted!");
       navigate("/");
     } catch (error) {
@@ -39,8 +41,23 @@ const NoteDetailsPage = () => {
       console.error("error deleting the note: ", error);
     }
   };
-   const handleUpdate = () =>{
-    toast("handle update function for now")
+   const handleUpdate = async()=> {
+    // toast("handle update function for now")
+    if(!note.title.trim() || !note.content.trim()) {
+      toast.error("please fill all fields");
+      return;
+    }
+    setUpdate(true);
+    try{
+      await meroAxios.put(`/notes/${id}`, note);
+      // await axios.put(`http://localhost:5001/api/notes/${id}`, note);
+      toast.success("note updated successfully!");
+    }catch(e){
+      console.error("error updating the note: ", e);
+      toast.error("couldn't update!")
+    } finally{
+      setUpdate(false);
+    }
    }
 
   if (isLoading) {

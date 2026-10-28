@@ -3,19 +3,22 @@ import axios from "axios";
 
 import Navbar from "../components/Navbar";
 import Card from "../components/Card";
+import NotFound from "../components/NotFound";
+import meroAxios from "../utils/axios";
 const HomePage = () => {
   const [notes, setNotes] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
   useEffect(() => {
     const getNotes = async () => {
       try {
-        const response = await axios.get("http://localhost:5001/api/notes");
+        const response = await meroAxios.get("/notes");
+        // const response = await axios.get("http://localhost:5001/api/notes");
         // const data = await response.json(); // skip this if using axios, only for fetch
         console.log(response.data);
         setNotes(response.data);
       } catch (error) {
         console.error("error fetching notes: ", error);
-      } finally{
+      } finally {
         setIsLoading(false);
       }
     };
@@ -24,12 +27,13 @@ const HomePage = () => {
   return (
     <div className="min-h-screen">
       <Navbar />
+      {notes.length === 0 && <NotFound />}
       <div className="grid max-w-6xl mx-auto mt-6  grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
         {isLoading ? (
-          <h2>Loading...</h2>
+          <h2 className="text-center text-primary py-8">Loading...</h2>
         ) : (
           notes.map((note) => (
-            <Card key={note._id} note={note} setNotes = {setNotes} />
+            <Card key={note._id} note={note} setNotes={setNotes} />
           ))
         )}
       </div>

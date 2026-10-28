@@ -4,6 +4,7 @@ import { Link, useNavigate } from "react-router";
 import { ArrowLeft, Loader2 } from "lucide-react";
 import toast from 'react-hot-toast';
 import axios from 'axios'
+import meroAxios from "../utils/axios";
 const CreatePage = () => {
   const [title, setTitle] = useState("");
   const [content, setContent] = useState("");
@@ -18,9 +19,10 @@ const CreatePage = () => {
     }
     setIsLoading(true);
     try {
-      await axios.post("http://localhost:5001/api/notes", {
-        title, content
-      })
+      await meroAxios.post("/notes", {title, content})
+      // await axios.post("http://localhost:5001/api/notes", {
+      //   title, content
+      // })
       toast.success("note created successfully!");
       navigate("/");
     } catch (error) {

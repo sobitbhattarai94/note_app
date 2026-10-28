@@ -10,6 +10,7 @@ const Card = ({ note ,setNotes}) => {
     e.preventDefault();
     setIsLoading(true);
     try {
+      if(!window.confirm("are you sure?")) return;
       await axios.delete(`http://localhost:5001/api/notes/${id}`);
       setNotes((prev) => prev.filter((note) => note._id !==id)); // this filters the deleted note from the notes that is to be fetched immediately
       toast.success("successfully deleted the note!");
